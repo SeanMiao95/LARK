@@ -1,3 +1,30 @@
+
+<div align="center">
+    <h1>
+        <font color="red">
+        ERNIE 项目已经迁移至 <a href="../README.zh.md">这里</a>
+        </font>
+    </h1>
+</div>
+
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
+
+
 ## ERNIE: **E**nhanced **R**epresentation through k**N**owledge **I**nt**E**gration
 
 **** **2019-04-10 更新**: update ERNIE_stable-1.0.1.tar.gz, 将模型参数、配置 ernie_config.json、vocab.txt 打包发布 ****
@@ -170,7 +197,7 @@ nlpcc-dbqa是由国际自然语言处理和中文计算会议NLPCC于2016年举�
 | [模型](https://ernie.bj.bcebos.com/ERNIE_stable.tgz) | 包含预训练模型参数 |
 | [模型(含配置文件及词典)](https://baidu-nlp.bj.bcebos.com/ERNIE_stable-1.0.1.tar.gz)) | 包含预训练模型参数、词典 vocab.txt、模型配置 ernie_config.json|
 
-2) [任务数据下载](https://ernie.bj.bcebos.com/task_data.tgz)
+2) [任务数据下载](https://ernie.bj.bcebos.com/task_data_zh.tgz)
 
 ### 安装
 本项目依赖于 Paddle Fluid 1.3.1，请参考[安装指南](http://www.paddlepaddle.org/#quick-start)进行安装。
@@ -279,7 +306,7 @@ text_a  label
 export FLAGS_sync_nccl_allreduce=1
 export CUDA_VISIBLE_DEVICES=7
 
-python -u ernir_encoder.py \
+python -u ernie_encoder.py \
                    --use_cuda true \
                    --batch_size 32 \
                    --output_dir "./test" \
@@ -295,3 +322,25 @@ python -u ernir_encoder.py \
 #### 如何获取输入句子中每个 token 经过 ERNIE 编码后的 Embedding 表示？
 
 [解决方案同上](#如何获取输入句子经过-ERNIE-编码后的-Embedding-表示?)
+
+#### 如何利用 finetune 得到的模型对新数据进行批量预测？
+
+我们以分类任务为例，给出了分类任务进行批量预测的脚本, 使用示例如下:
+
+```
+python -u predict_classifier.py \
+       --use_cuda true \
+       --batch_size 32 \
+       --vocab_path config/vocab.txt \
+       --init_checkpoint "./checkpoints/step_100" \
+       --do_lower_case true \
+       --max_seq_len 128 \
+       --ernie_config_path config/ernie_config.json \
+       --do_predict true \
+       --predict_set ${TASK_DATA_PATH}/lcqmc/test.tsv \
+       --num_labels 2
+```
+
+实际使用时，需要通过 `init_checkpoint` 指定预测用的模型，通过 `predict_set` 指定待预测的数据文件，通过 `num_labels` 配置分类的类别数目;
+
+**Note**: predict_set 的数据格式是由 text_a、text_b(可选) 组成的1列/2列 tsv 文件;
